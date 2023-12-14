@@ -6,5 +6,5 @@ camera_types: list = [
 ]
 
 # The camera config has to be the camera port and the camera type
-CAMERA_CONFIG: tuple = (1, camera_types[0])
+CAMERA_CONFIG: tuple = (0, camera_types[0])
 

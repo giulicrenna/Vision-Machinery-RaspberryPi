@@ -8,6 +8,10 @@ import cv2 as cv
 import imutils
 import sys
 import qdarkstyle
+import os
+
+os.environ['QT_QPA_PLATFORM'] = 'windows'
+#'linuxfb' 'windows'
 
 reader = BarcodeReaderPyZbar()
 
@@ -47,11 +51,14 @@ class Window(QMainWindow):
         self.update_worker = Worker()
         self.update_worker.start()
         self.update_worker.image_update.connect(self.set_picture)
+        
+        self.window_.pushButton_2.clicked.connect(self.close)   
                 
     def set_picture(self, imageComponent: QImage) -> None:
         self.window_.label.setPixmap(QPixmap.fromImage(imageComponent))
 
-
+    def close(self) -> None:
+        ...
         
 
 if __name__ == "__main__":
