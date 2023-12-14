@@ -10,7 +10,7 @@ import sys
 import qdarkstyle
 import os
 
-os.environ['QT_QPA_PLATFORM'] = 'windows'
+os.environ['QT_QPA_PLATFORM'] = 'linuxfb'
 #'linuxfb' 'windows'
 
 reader = BarcodeReaderPyZbar()
@@ -58,7 +58,7 @@ class Window(QMainWindow):
         self.window_.label.setPixmap(QPixmap.fromImage(imageComponent))
 
     def close(self) -> None:
-        ...
+        sys.exit(0)
         
 
 if __name__ == "__main__":
