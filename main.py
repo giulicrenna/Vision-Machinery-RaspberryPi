@@ -10,7 +10,7 @@ import sys
 import qdarkstyle
 import os
 
-os.environ['QT_QPA_PLATFORM'] = 'windows'
+os.environ['QT_QPA_PLATFORM'] = 'linuxfb'
 #'linuxfb' 'windows'
 
 
