@@ -9,10 +9,15 @@ import imutils
 import sys
 import qdarkstyle
 import os
+from sys import platform
 
-os.environ['QT_QPA_PLATFORM'] = 'linuxfb'
+
+if platform == "linux" or platform == "linux2":
+    os.environ['QT_QPA_PLATFORM'] = 'linuxfb'
+elif platform == "win32":
+    os.environ['QT_QPA_PLATFORM'] = 'windows'
+
 #'linuxfb' 'windows'
-
 
 reader = BarcodeReaderPyZbar()
 
