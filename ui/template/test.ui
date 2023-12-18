@@ -86,16 +86,10 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>1280</width>
-          <height>800</height>
-         </size>
         </property>
         <property name="tabShape">
          <enum>QTabWidget::Rounded</enum>
