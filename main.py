@@ -23,17 +23,20 @@ class Worker(QThread):
         self.ThreadActive = True
         
         while self.ThreadActive:
-            frame, code, _ = reader.process_buffer()
-            image = frame#imutils.resize(frame, width=640)
-            frame = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-            
-            imageComponent = QImage(frame,
-                                    frame.shape[1],
-                                    frame.shape[0],
-                                    frame.strides[0],
-                                    QImage.Format_RGB888)
-            
-            self.image_update.emit(imageComponent)
+            try:
+                frame, code, _ = reader.process_buffer()
+                image = frame#imutils.resize(frame, width=640)
+                frame = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+                
+                imageComponent = QImage(frame,
+                                        frame.shape[1],
+                                        frame.shape[0],
+                                        frame.strides[0],
+                                        QImage.Format_RGB888)
+                
+                self.image_update.emit(imageComponent)
+            except:
+                pass
             
     def stop(self):
         self.ThreadActive = False
@@ -54,7 +57,8 @@ class Window(QMainWindow):
         self.update_worker.image_update.connect(self.set_picture)
         
         self.window_.pushButton_2.clicked.connect(self.close)   
-                
+        
+        self.showMaximized()
     def set_picture(self, imageComponent: QImage) -> None:
         self.window_.label.setPixmap(QPixmap.fromImage(imageComponent))
 
