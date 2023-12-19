@@ -67,12 +67,8 @@ def detect_barcode(image) -> list:
 
 
 class BarcodeReader:
-    def __init__(self) -> None:
-        camera_port: int | str = CAMERA_CONFIG[0]
-        if CAMERA_CONFIG[1] in ["LOCAL_CAMERA_PORT","WLAN_CAMERA_IP", "LOCAL_VIDEO"]:
-            self.image_buffer = cv.VideoCapture(camera_port)
-        if CAMERA_CONFIG[1] in ["LOCAL_IMAGE"]:            
-            self.image_buffer = cv.VideoCapture(camera_port)
+    def __init__(self, camera_port: str | int, config: int = cv.CAP_FFMPEG) -> None:
+        self.image_buffer = cv.VideoCapture(camera_port, config)
             
     def process_buffer(self, run_on_loop: bool = False) -> None:
         while True:
@@ -99,12 +95,8 @@ class BarcodeReader:
             if not run_on_loop: break
             
 class BarcodeReaderPyZbar:
-    def __init__(self) -> None:
-        camera_port: int | str = CAMERA_CONFIG[0]
-        if CAMERA_CONFIG[1] in ["LOCAL_CAMERA_PORT","WLAN_CAMERA_IP", "LOCAL_VIDEO"]:
-            self.image_buffer = cv.VideoCapture(camera_port)
-        if CAMERA_CONFIG[1] in ["LOCAL_IMAGE"]:            
-            self.image_buffer = cv.VideoCapture(camera_port)
+    def __init__(self, camera_port: str | int, config: int = cv.CAP_FFMPEG) -> None:
+        self.image_buffer = cv.VideoCapture(camera_port, config)
 
         self.last_type_detected: str = ""
         self.last_code_detected: str = ""
