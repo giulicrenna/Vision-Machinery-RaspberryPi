@@ -7,6 +7,9 @@ from src.config import *
 
 warnings.filterwarnings('ignore') 
 
+ARUCO_TYPE: int = cv.aruco.DICT_ARUCO_ORIGINAL
+FLIP: bool = False
+
 """
 ABSTRACTO:
 El cálculo del gradiente de Scharr es un método utilizado 
@@ -172,10 +175,62 @@ class BarcodeReaderPyZbar:
                 break
         cv.destroyAllWindows()
         
+class ArucoReader:
+    def __init__(self, camera_port: str | int, config: int = cv.CAP_FFMPEG) -> None:
+        self.camera_port = camera_port
+        self.image_buffer = cv.VideoCapture(self.camera_port)
+        self.arucoDict = cv.aruco.getPredefinedDictionary(ARUCO_TYPE)
+        self.arucoParams = cv.aruco.DetectorParameters()
+        self.detector = cv.aruco.ArucoDetector(self.arucoDict, self.arucoParams)
+        
+    def aruco_display(self, corners, ids, rejected, image):
+        if len(corners) > 0: 
+            ids = ids.flatten()
+            
+            for (markerCorner, markerID) in zip(corners, ids):
+                
+                corners = markerCorner.reshape((4, 2))
+                (topLeft, topRight, bottomRight, bottomLeft) = corners
+                
+                topRight = (int(topRight[0]), int(topRight[1]))
+                bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+                bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+                topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+                cv.line(image, topLeft, topRight, (0, 255, 0), 2)
+                cv.line(image, topRight, bottomRight, (0, 255, 0), 2)
+                cv.line(image, bottomRight, bottomLeft, (0, 255, 0), 2)
+                cv.line(image, bottomLeft, topLeft, (0, 255, 0), 2)
+                
+                cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+                cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+                cv.circle(image, (cX, cY), 4, (0, 0, 255), -1)
+                
+                cv.putText(image, str(markerID),(topLeft[0], topLeft[1] - 10), cv.FONT_HERSHEY_SIMPLEX,
+                    0.5, (0, 255, 0), 2)
+                #print("[Inference] ArUco marker ID: {}".format(markerID))
+
+        return image
     
+    def aruco_proccesor(self) -> tuple:
+        ret, img = self.image_buffer.read()
+
+        h, w, _ = img.shape
+
+        width = 1000
+        height = int(width*(h/w))
+        img = cv.resize(img, (width, height), interpolation=cv.INTER_CUBIC)
+        if FLIP: img = cv.flip(img, 1)
+        
+        corners, ids, rejected = self.detector.detectMarkers(img)
+
+        detected_markers = self.aruco_display(corners, ids, rejected, img)
+        
+        return detected_markers, ids
+  
 if __name__ == '__main__':
-    reader = BarcodeReaderPyZbar()
-    f, _, _ = reader.run_on_loop()
-         
+    dector = ArucoReader(0)
     
-    
+    cv.imshow("Image", dector.aruco_proccesor()[0])
+
+    key = cv.waitKey(1) & 0xFF
